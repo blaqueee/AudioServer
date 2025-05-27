@@ -9,4 +9,14 @@
         <option value="room">ROOM</option>
     </selection>
 
+    <selection name="days.of.week.select">
+        <option value="1">MONDAY</option>
+        <option value="2">TUESDAY</option>
+        <option value="3">WEDNESDAY</option>
+        <option value="4">THURSDAY</option>
+        <option value="5">FRIDAY</option>
+        <option value="6">SATURDAY</option>
+        <option value="7">SUNDAY</option>
+    </selection>
+
 </object-views>
