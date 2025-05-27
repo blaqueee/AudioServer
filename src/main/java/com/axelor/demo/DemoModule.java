@@ -25,7 +25,5 @@ public class DemoModule extends AxelorModule {
 
   @Override
   protected void configure() {
-    bind(MailService.class).to(DemoMailService.class);
-    bind(DemoEventLogger.class);
   }
 }

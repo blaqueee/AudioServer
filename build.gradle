@@ -35,11 +35,7 @@ allprojects {
 }
 
 dependencies {
-  // add module dependencies
-  implementation project(':modules:demo-contact')
-  implementation project(':modules:demo-sale')
-  implementation project(':modules:demo-project')
-  implementation project(':modules:demo-custom')
+  implementation project(':modules:demo-audio')
 }
 
 war {

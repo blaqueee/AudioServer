@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_7.4.xsd">
+
+    <module name="audio" package="com.axelor.apps.audio.db"/>
+
+    <entity name="CustomsOffice">
+        <string name="name" title="Name"/>
+        <string name="code" title="Code"/>
+        <string name="type" selection="audio.customs.office.type.select" title="Type"/>
+        <string name="tcpAddress" title="TCP address"/>
+        <many-to-one name="parent" ref="com.axelor.apps.audio.db.CustomsOffice" title="Parent"/>
+        <boolean name="isActive" title="Is active"/>
+    </entity>
+
+</domain-models>

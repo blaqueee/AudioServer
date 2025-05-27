@@ -1,0 +1,14 @@
+plugins {
+  id 'com.axelor.app'
+}
+
+axelor {
+  title = "Audio Server"
+
+  description = """\
+Audio server implementation.
+"""
+}
+
+dependencies {
+}
