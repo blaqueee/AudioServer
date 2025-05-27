@@ -44,8 +44,8 @@ public class SoundTaskServiceImpl implements SoundTaskService {
 
     @Override
     @Transactional(rollbackOn = {Exception.class})
-    public SoundTask update(SoundTask soundTask) throws SchedulerException {
-        soundTask = soundTaskRepository.find(soundTask.getId());
+    public SoundTask update(Long id) throws SchedulerException {
+        SoundTask soundTask = soundTaskRepository.find(id);
 
         MetaSchedule schedule = createOrUpdateSchedule(soundTask);
         soundTask.setMetaSchedule(schedule);
@@ -76,7 +76,6 @@ public class SoundTaskServiceImpl implements SoundTaskService {
 
         MetaSchedule saved = metaScheduleRepository.save(schedule);
         jobRunner.update(saved);
-        metaScheduleRepository.refresh(saved);
 
         return saved;
     }

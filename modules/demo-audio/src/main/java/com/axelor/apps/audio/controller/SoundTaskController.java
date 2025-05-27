@@ -18,7 +18,7 @@ public class SoundTaskController {
         SoundTask soundTask = request.getContext().asType(SoundTask.class);
 
         try {
-            SoundTask updated = soundTaskService.update(soundTask);
+            SoundTask updated = soundTaskService.update(soundTask.getId());
             response.setValues(updated);
             response.setReload(true);
         } catch (Exception e) {
