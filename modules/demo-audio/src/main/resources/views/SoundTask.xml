@@ -14,8 +14,8 @@
 
     <form title="Sound task" name="audio-sound-task-form" model="com.axelor.apps.audio.db.SoundTask" canSave="false">
         <panel colSpan="12" itemSpan="4">
-            <field name="name"/>
-            <field name="isActive"/>
+            <field name="name" required="true"/>
+            <field name="isActive" required="true"/>
             <field name="oneTimeTask" onChange="audio-sound-task-one-time-task-onchange-action-attrs"/>
         </panel>
 
@@ -36,7 +36,7 @@
         </panel>
 
         <panel colSpan="12" sidebar="true">
-            <button name="saveBtn" onClick="save" colSpan="12" title="Save"/>
+            <button name="saveBtn" onClick="save,audio-sound-task-update-action-method" colSpan="12" title="Save"/>
         </panel>
     </form>
     
@@ -45,5 +45,9 @@
         <attribute for="executionTime" name="value" expr="eval: null"/>
         <attribute for="daysOfWeek" name="value" expr="eval: null"/>
     </action-attrs>
+
+    <action-method name="audio-sound-task-update-action-method">
+        <call class="SoundTaskController" method="update"/>
+    </action-method>
 
 </object-views>
