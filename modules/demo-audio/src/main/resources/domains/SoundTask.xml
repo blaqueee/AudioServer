@@ -7,7 +7,7 @@
 
     <entity name="SoundTask">
         <!-- Название -->
-        <string name="name" title="Name"/>
+        <string name="name" title="Name" unique="true"/>
         <!-- Активная запись -->
         <boolean name="isActive" title="Is active"/>
         <!-- Файл звука -->
@@ -17,7 +17,7 @@
         <!-- Одноразовая задача? -->
         <boolean name="oneTimeTask" title="One time task"/>
         <!-- Дата и время выполнения -->
-        <datetime name="executionDateTime" title="Date and time of execution"/>
+        <date name="executionDate" title="Date and time of execution"/>
         <!-- Время выполнения -->
         <time name="executionTime" title="Time of execution"/>
         <!-- Дни недели -->
