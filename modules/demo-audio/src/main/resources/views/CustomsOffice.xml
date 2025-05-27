@@ -14,9 +14,12 @@
 
     <form title="Customs organ" name="audio-customs-office-form" model="com.axelor.apps.audio.db.CustomsOffice">
         <panel colSpan="12">
-
-
-
+            <field name="name"/>
+            <field name="code"/>
+            <field name="type"/>
+            <field name="parent"/>
+            <field name="tcpAddress"/>
+            <field name="isActive"/>
         </panel>
     </form>
 
