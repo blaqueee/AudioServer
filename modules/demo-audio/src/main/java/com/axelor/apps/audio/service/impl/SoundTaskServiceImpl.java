@@ -71,6 +71,7 @@ public class SoundTaskServiceImpl implements SoundTaskService {
         MetaScheduleParam param = new MetaScheduleParam();
         param.setName("soundTaskId");
         param.setValue(String.valueOf(soundTask.getId()));
+        schedule.clearParams();
         schedule.addParam(param);
 
         MetaSchedule saved = metaScheduleRepository.save(schedule);

@@ -47,7 +47,7 @@
     </action-attrs>
 
     <action-method name="audio-sound-task-update-action-method">
-        <call class="SoundTaskController" method="update"/>
+        <call class="com.axelor.apps.audio.controller.SoundTaskController" method="update"/>
     </action-method>
 
 </object-views>
