@@ -12,4 +12,11 @@
       <view type="form" name="audio-customs-office-form"/>
     </action-view>
 
+  <menuitem name="menu-sounds-tasks" title="Sound tasks" action="sound-task-all"/>
+
+  <action-view name="sound-task-all" title="Sound tasks" model="com.axelor.apps.audio.db.SoundTask">
+    <view type="grid" name="audio-sound-task-grid"/>
+    <view type="form" name="audio-sound-task-form"/>
+  </action-view>
+
 </object-views>
