@@ -24,7 +24,7 @@
             <field name="executionTime" required="true"/>
         </panel>
 
-        <panel colSpan="12" showIf="oneTimeTask == false">
+        <panel colSpan="12" showIf="oneTimeTask == false" itemSpan="6">
             <field name="daysOfWeek" widget="CheckboxSelect" x-direction="vertical" requiredIf="oneTimeTask == false"/>
             <field name="executionTime" required="true"/>
         </panel>
