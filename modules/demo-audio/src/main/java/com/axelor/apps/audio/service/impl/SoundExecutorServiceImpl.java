@@ -62,13 +62,13 @@ public class SoundExecutorServiceImpl implements SoundExecutorService {
         ExecutorService taskSpecificExecutor = Executors.newFixedThreadPool(poolSizeForThisTask);
 
         for (CustomsOffice office : customsOffices) {
-            if (office.getTcpAddress() == null || office.getTcpAddress().trim().isEmpty()) continue;
-
             taskSpecificExecutor.submit(() -> {
                 try {
                     soundSenderService.send(soundFilePath.toFile(), office);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             });
         }

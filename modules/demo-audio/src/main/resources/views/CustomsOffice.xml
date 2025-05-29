@@ -8,7 +8,6 @@
         <field name="code"/>
         <field name="type"/>
         <field name="parent"/>
-        <field name="tcpAddress"/>
         <field name="isActive"/>
     </grid>
 
@@ -18,7 +17,6 @@
             <field name="code"/>
             <field name="type"/>
             <field name="parent"/>
-            <field name="tcpAddress"/>
             <field name="isActive"/>
         </panel>
     </form>
