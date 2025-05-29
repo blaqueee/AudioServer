@@ -25,14 +25,14 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session) {
         Map<String, List<String>> params = session.getRequestParameterMap();
-        String code = params.getOrDefault("code", null).toString();
+        String id = params.getOrDefault("id", null).toString();
 
-        if (code != null) {
-            sessionStorage.addSession(session, code);
-            LOG.debug("Client connected: {}", code);
+        if (id != null) {
+            sessionStorage.addSession(session, Long.parseLong(id));
+            LOG.debug("Client connected: {}", id);
         } else {
             try {
-                session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Code required"));
+                session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "ID required"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

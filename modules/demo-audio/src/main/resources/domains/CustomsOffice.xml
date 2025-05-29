@@ -9,7 +9,6 @@
         <string name="name" title="Name"/>
         <string name="code" title="Code"/>
         <string name="type" selection="audio.customs.office.type.select" title="Type"/>
-        <string name="tcpAddress" title="TCP address"/>
         <many-to-one name="parent" ref="com.axelor.apps.audio.db.CustomsOffice" title="Parent"/>
         <boolean name="isActive" title="Is active"/>
     </entity>

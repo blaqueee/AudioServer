@@ -13,22 +13,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class SessionStorage {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Map<String, Session> sessions = new ConcurrentHashMap<>();
+    private final Map<Long, Session> sessions = new ConcurrentHashMap<>();
 
-    public void addSession(Session session, String customsOCode) {
-        sessions.put(customsOCode, session);
+    public void addSession(Session session, Long id) {
+        sessions.put(id, session);
     }
 
     public void removeSession(String sessionId) {
         sessions.values().removeIf(s -> s.getId().equals(sessionId));
     }
 
-    public Session getSession(String customsOCode) {
-        return sessions.get(customsOCode);
+    public Session getSession(Long id) {
+        return sessions.get(id);
     }
 
-    public void sendTo(String code, String message) throws Exception {
-        Session session = getSession(code);
+    public void sendTo(Long id, String message) throws Exception {
+        Session session = getSession(id);
         if (session != null && session.isOpen()) {
             try {
                 session.getBasicRemote().sendText(message);

@@ -22,10 +22,10 @@ public class SoundSenderServiceImpl implements SoundSenderService {
 
     @Override
     public void send(File soundFile, CustomsOffice customsOffice) throws Exception {
-        if (soundFile == null || customsOffice == null || customsOffice.getTcpAddress() == null) return;
+        if (soundFile == null || customsOffice == null) return;
         CommandDto commandDto =
                 CommandDto.toCommandDto(COMMAND_PLAY, soundFile.getAbsolutePath());
         sessionStorage
-                .sendTo(customsOffice.getCode(), JsonConvert.toJson(commandDto));
+                .sendTo(customsOffice.getId(), JsonConvert.toJson(commandDto));
     }
 }
