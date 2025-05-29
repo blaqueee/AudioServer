@@ -1,5 +1,6 @@
 package com.axelor.apps.audio.websocket;
 
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,21 +10,25 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/ws")
 public class WebSocketServer {
 
-    private static final Map<String, Session> clients = new ConcurrentHashMap<>();
+    private final SessionStorage sessionStorage;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    @Inject
+    public WebSocketServer(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
+    }
 
     @OnOpen
     public void onOpen(Session session) {
         Map<String, List<String>> params = session.getRequestParameterMap();
-        String code = params.getOrDefault("code", List.of()).stream().findFirst().orElse(null);
+        String code = params.getOrDefault("code", null).toString();
 
         if (code != null) {
-            clients.put(code, session);
+            sessionStorage.addSession(session, code);
             LOG.debug("Client connected: {}", code);
         } else {
             try {
@@ -36,20 +41,6 @@ public class WebSocketServer {
 
     @OnClose
     public void onClose(Session session) {
-        clients.values().removeIf(s -> s.getId().equals(session.getId()));
-    }
-
-    public static void sendTo(String code, String message) throws Exception {
-        Session session = clients.get(code);
-        if (session != null && session.isOpen()) {
-            try {
-                session.getBasicRemote().sendText(message);
-                LOG.debug("Message sent: {}", message);
-            } catch (IOException e) {
-                throw new Exception();
-            }
-        } else {
-            throw new Exception("Client not found");
-        }
+        sessionStorage.removeSession(session.getId());
     }
 }

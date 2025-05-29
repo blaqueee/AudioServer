@@ -69,6 +69,8 @@ public class SoundExecutorServiceImpl implements SoundExecutorService {
                     soundSenderService.send(soundFilePath.toFile(), office);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             });
         }
