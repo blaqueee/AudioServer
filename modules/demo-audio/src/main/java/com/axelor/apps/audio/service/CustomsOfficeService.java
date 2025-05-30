@@ -1,12 +1,9 @@
 package com.axelor.apps.audio.service;
 
-import com.axelor.apps.audio.db.CustomsOffice;
-
-import java.util.List;
+import com.axelor.apps.audio.dto.CustomsOfficeResponseDto;
 
 public interface CustomsOfficeService {
 
-    List<CustomsOffice> getAllParents();
-    List<CustomsOffice> getAllByParentId(Long id);
-
+    CustomsOfficeResponseDto getAllParents();
+    CustomsOfficeResponseDto getAllByParentId(Long id);
 }
