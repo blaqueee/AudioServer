@@ -20,7 +20,7 @@ public class SoundController {
         this.service = service;
     }
 
-    @POST
+    @GET
     @Path("/")
     public Response getSound(@QueryParam("id") String id) {
         try {
