@@ -22,9 +22,9 @@ public class SoundController {
 
     @POST
     @Path("/")
-    public Response getSound(@QueryParam("url") String url) {
+    public Response getSound(@QueryParam("id") String id) {
         try {
-            File soundFile = service.getSoundFile(url);
+            File soundFile = service.getSoundFile(id);
             return Response.ok(soundFile, "audio/mpeg")
                     .header("Content-Disposition", "attachment; filename=\"" + soundFile.getName() + "\"")
                     .build();

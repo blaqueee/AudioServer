@@ -2,8 +2,6 @@ package com.axelor.apps.audio.service;
 
 import com.axelor.apps.audio.db.CustomsOffice;
 
-import java.io.File;
-
 public interface SoundSenderService {
-    void send(File soundFile, CustomsOffice customsOffice) throws Exception;
+    void send(Long id, CustomsOffice customsOffice) throws Exception;
 }
