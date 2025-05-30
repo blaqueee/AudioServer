@@ -10,6 +10,11 @@ import com.axelor.apps.audio.service.impl.SoundSenderServiceImpl;
 import com.axelor.apps.audio.service.impl.SoundServiceImpl;
 import com.axelor.apps.audio.service.impl.SoundTaskServiceImpl;
 import com.axelor.apps.audio.websocket.SessionStorage;
+import com.axelor.apps.audio.websocket.WebSocketServer;
+import com.axelor.apps.audio.websocket.channesl.EvenLogChanel;
+import com.axelor.web.socket.Channel;
+import com.axelor.web.socket.WebSocketEndpoint;
+import com.google.inject.multibindings.Multibinder;
 
 public class AudioModule extends AxelorModule {
 
@@ -20,6 +25,11 @@ public class AudioModule extends AxelorModule {
         bind(SoundSenderService.class).to(SoundSenderServiceImpl.class);
         bind(SoundService.class).to(SoundServiceImpl.class);
         bind(SessionStorage.class).asEagerSingleton();
+
+        Multibinder<Channel> multibinder = Multibinder.newSetBinder(this.binder(), Channel.class);
+        multibinder.addBinding().to(EvenLogChanel.class);
+        this.bind(WebSocketEndpoint.class).asEagerSingleton();
+        bind(WebSocketServer.class).asEagerSingleton();
     }
 
 }

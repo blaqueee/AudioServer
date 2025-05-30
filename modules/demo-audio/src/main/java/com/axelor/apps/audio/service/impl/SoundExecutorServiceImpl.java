@@ -52,7 +52,6 @@ public class SoundExecutorServiceImpl implements SoundExecutorService {
         if (soundTask.getCustomsOffices() == null || soundTask.getCustomsOffices().isEmpty()) return;
         Set<CustomsOffice> customsOffices = soundTask.getCustomsOffices();
         MetaFile soundFile = soundTask.getSoundFile();
-        Path soundFilePath = MetaFiles.getPath(soundFile);
 
         int numOffices = customsOffices.size();
 
@@ -64,7 +63,7 @@ public class SoundExecutorServiceImpl implements SoundExecutorService {
         for (CustomsOffice office : customsOffices) {
             taskSpecificExecutor.submit(() -> {
                 try {
-                    soundSenderService.send(soundFilePath.toFile(), office);
+                    soundSenderService.send(soundFile.getId(), office);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {

@@ -31,7 +31,7 @@
 
         <panel colSpan="12">
             <field name="customsOffices" colSpan="12" required="true" grid-view="audio-customs-office-grid" form-view="audio-customs-office-form"
-                   canNew="false" canSelect="true" canEdit="false" canView="true" canRemove="true" domain="self.isActive IS TRUE AND self.tcpAddress IS NOT NULL"/>
+                   canNew="false" canSelect="true" canEdit="false" canView="true" canRemove="true" domain="self.isActive IS TRUE"/>
             <field name="soundFile" widget="binary-link" required="true" x-accept=".mp3"/>
         </panel>
 

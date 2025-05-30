@@ -7,8 +7,6 @@ import com.axelor.apps.audio.websocket.SessionStorage;
 import com.axelor.apps.audio.websocket.dto.CommandDto;
 import com.google.inject.Inject;
 
-import java.io.File;
-
 import static com.axelor.apps.audio.websocket.dto.CommandDto.COMMAND_PLAY;
 
 public class SoundSenderServiceImpl implements SoundSenderService {
@@ -21,10 +19,10 @@ public class SoundSenderServiceImpl implements SoundSenderService {
     }
 
     @Override
-    public void send(File soundFile, CustomsOffice customsOffice) throws Exception {
-        if (soundFile == null || customsOffice == null) return;
+    public void send(Long id, CustomsOffice customsOffice) throws Exception {
+        if (id == null || customsOffice == null) return;
         CommandDto commandDto =
-                CommandDto.toCommandDto(COMMAND_PLAY, soundFile.getAbsolutePath());
+                CommandDto.toCommandDto(COMMAND_PLAY, id);
         sessionStorage
                 .sendTo(customsOffice.getId(), JsonConvert.toJson(commandDto));
     }
