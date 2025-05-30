@@ -1,8 +1,7 @@
 package com.axelor.apps.audio.service;
 
-import java.util.List;
-import java.util.Map;
+import com.axelor.apps.audio.dto.SearchResponseDto;
 
 public interface SearchService {
-    List<Map<String, Object>> findAndSort(String model, String where, String orderBy, String name) throws ClassNotFoundException;
+    SearchResponseDto findAndSort(String model, String where, String orderBy, String name) throws ClassNotFoundException;
 }

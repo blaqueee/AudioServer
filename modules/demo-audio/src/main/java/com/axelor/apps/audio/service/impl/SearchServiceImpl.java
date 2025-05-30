@@ -1,5 +1,6 @@
 package com.axelor.apps.audio.service.impl;
 
+import com.axelor.apps.audio.dto.SearchResponseDto;
 import com.axelor.apps.audio.service.SearchService;
 import com.axelor.db.JPA;
 import com.axelor.db.JpaSecurity;
@@ -28,7 +29,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<Map<String, Object>> findAndSort(String model, String where, String orderBy, String name) throws ClassNotFoundException {
+    public SearchResponseDto findAndSort(String model, String where, String orderBy, String name) throws ClassNotFoundException {
+        SearchResponseDto responseDto = new SearchResponseDto();
+
         if (isBlank(model)) {
             return null;
         }
@@ -57,8 +60,8 @@ public class SearchServiceImpl implements SearchService {
             query.setParameter("nameParam", "%" + name + "%");
         }
 
-        List<Object> objects = query.getResultList();
-        return convertToMap(objects);
+        responseDto.setData(query.getResultList());
+        return responseDto;
     }
 
     private Filter getSecurityFilter(Class<? extends Model> type) {
