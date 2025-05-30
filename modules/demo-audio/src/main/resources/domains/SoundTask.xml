@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_7.4.xsd">
+
+    <module name="audio" package="com.axelor.apps.audio.db"/>
+
+    <entity name="SoundTask">
+        <!-- Название -->
+        <string name="name" title="Name" unique="true"/>
+        <!-- Активная запись -->
+        <boolean name="isActive" title="Is active"/>
+        <!-- Файл звука -->
+        <many-to-one name="soundFile" ref="com.axelor.meta.db.MetaFile" title="Sound file"/>
+        <!-- Таможенные органы -->
+        <many-to-many name="customsOffices" ref="com.axelor.apps.audio.db.CustomsOffice" title="Customs offices"/>
+        <!-- Одноразовая задача? -->
+        <boolean name="oneTimeTask" title="One time task"/>
+        <!-- Дата и время выполнения -->
+        <date name="executionDate" title="Date and time of execution"/>
+        <!-- Время выполнения -->
+        <time name="executionTime" title="Time of execution"/>
+        <!-- Дни недели -->
+        <string name="daysOfWeek" title="Days of week" selection="days.of.week.select"/>
+        <!-- Связь с сущностью Job -->
+        <many-to-one name="metaSchedule" ref="com.axelor.meta.db.MetaSchedule" title="Schedule"/>
+
+    </entity>
+
+</domain-models>
