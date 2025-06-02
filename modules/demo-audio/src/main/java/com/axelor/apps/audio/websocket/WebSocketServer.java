@@ -55,9 +55,9 @@ public class WebSocketServer {
     public void onOpen(Session session) {
         Map<String, List<String>> params = session.getRequestParameterMap();
         List<String> ides = params.getOrDefault("id", null);
-        String id = ides.get(0);
 
-        if (id != null) {
+        if (ides != null && !ides.isEmpty()) {
+            String id = ides.get(0);
             sessionStorage.addSession(session, Long.parseLong(id));
             LOG.debug("Client connected: {}", id);
         } else {
@@ -71,6 +71,30 @@ public class WebSocketServer {
 
     @OnClose
     public void onClose(Session session) {
+        LOG.error("Client disconnected: {}", session.getId());
         sessionStorage.removeSession(session.getId());
+
+        if (session.isOpen()) {
+            try {
+                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Session closed"));
+            } catch (IOException e) {
+                LOG.error("Failed to close session after error: {}", session.getId(), e);
+            }
+        }
     }
+
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        LOG.error("WebSocket error on session {}: {}", session.getId(), throwable.getMessage(), throwable);
+        sessionStorage.removeSession(session.getId());
+
+        if (session.isOpen()) {
+            try {
+                session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Server error"));
+            } catch (IOException e) {
+                LOG.error("Failed to close session after error: {}", session.getId(), e);
+            }
+        }
+    }
+
 }
