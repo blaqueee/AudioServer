@@ -41,6 +41,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = 'open-platform-demo'
+rootProject.name = 'audio'
 
 include 'modules:demo-audio'
