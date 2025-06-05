@@ -6,7 +6,7 @@ AudioServer is a demo application designed to showcase the features and capabili
 
 This project serves as a practical example for developers looking to understand how to build applications using the Axelor platform.
 
-## Features (Based on Axelor Open Platform Demo)
+## Features (Based on Axelor Open Platform)
 
 * Demonstrates core functionalities of the Axelor Open Platform.
 * Provides a basic structure for an Axelor application.
