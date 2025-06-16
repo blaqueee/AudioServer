@@ -3,6 +3,8 @@ package com.axelor.apps.audio.module;
 import com.axelor.app.AxelorModule;
 import com.axelor.apps.audio.db.repo.CustomsOfficeRepo;
 import com.axelor.apps.audio.db.repo.CustomsOfficeRepository;
+import com.axelor.apps.audio.db.repo.SoundTaskRepo;
+import com.axelor.apps.audio.db.repo.SoundTaskRepository;
 import com.axelor.apps.audio.service.*;
 import com.axelor.apps.audio.service.impl.*;
 import com.axelor.apps.audio.websocket.SessionStorage;
@@ -24,6 +26,7 @@ public class AudioModule extends AxelorModule {
         bind(WebSocketServer.class).asEagerSingleton();
         bind(CustomsOfficeRepository.class).to(CustomsOfficeRepo.class);
         bind(CustomsOfficeService.class).to(CustomsOfficeServiceImpl.class);
+        bind(SoundTaskRepository.class).to(SoundTaskRepo.class);
     }
 
 }
