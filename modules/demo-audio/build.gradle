@@ -12,4 +12,5 @@ Audio server implementation.
 
 dependencies {
   implementation 'javax.websocket:javax.websocket-api:1.1'
+  implementation 'javax.annotation:javax.annotation-api:1.3.2'
 }
