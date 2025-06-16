@@ -5,7 +5,7 @@
 
     <grid title="Log grid" name="job-log-grid" model="com.axelor.apps.audio.db.JobLog"
             canSave="false" canEdit="false" canDelete="false" canNew="false">
-        <field name="customOfficeName"/>
+        <field name="customOffice"/>
         <field name="status"/>
         <field name="sentAt"/>
     </grid>
@@ -13,7 +13,7 @@
     <form title="Log form" name="job-log-form" model="com.axelor.apps.audio.db.JobLog"
             canNew="false" canEdit="false" canSave="false" canDelete="false">
         <panel readonly="true">
-            <field name="customOfficeName"/>
+            <field name="customOffice"/>
             <field name="status"/>
             <field name="sentAt"/>
         </panel>

@@ -60,7 +60,7 @@ public class SessionStorage {
     private void saveLogs(Long id, String status) {
         CustomsOffice customsOffice = customsOfficeRepo.find(id);
         JobLog jobLog = new JobLog();
-        jobLog.setCustomOfficeName(customsOffice.getName());
+        jobLog.setCustomOffice(customsOffice);
         jobLog.setSentAt(LocalDateTime.now());
         jobLog.setStatus(status);
         jobLogRepository.save(jobLog);

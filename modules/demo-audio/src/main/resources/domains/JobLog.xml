@@ -6,7 +6,7 @@
     <module name="audio" package="com.axelor.apps.audio.db"/>
 
     <entity name="JobLog">
-        <string name="customOfficeName" title="Custom office"/>
+        <many-to-one ref="com.axelor.apps.audio.db.CustomsOffice" name="customOffice" title="Custom office"/>
         <string name="status" selection="log.status.select" title="Status"/>
         <datetime name="sentAt" title="Sent at"/>
 
