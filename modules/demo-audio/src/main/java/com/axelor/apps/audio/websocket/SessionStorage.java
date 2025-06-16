@@ -46,21 +46,23 @@ public class SessionStorage {
         if (session != null && session.isOpen()) {
             try {
                 session.getBasicRemote().sendText(message);
-                this.saveLogs(id);
+                this.saveLogs(id, JobLogRepository.STATUS_SUCCESS);
                 LOG.debug("Message sent: {}", message);
             } catch (IOException e) {
                 throw new Exception();
             }
         } else {
+            this.saveLogs(id, JobLogRepository.STATUS_FAILED);
             throw new Exception("Client not found");
         }
     }
 
-    private void saveLogs(Long id) {
+    private void saveLogs(Long id, String status) {
         CustomsOffice customsOffice = customsOfficeRepo.find(id);
         JobLog jobLog = new JobLog();
         jobLog.setCustomOfficeName(customsOffice.getName());
         jobLog.setSentAt(LocalDateTime.now());
+        jobLog.setStatus(status);
         jobLogRepository.save(jobLog);
     }
 }

@@ -19,4 +19,9 @@
         <option value="7">SUNDAY</option>
     </selection>
 
+    <selection name="log.status.select">
+        <option value="success">SUCCESS</option>
+        <option value="failed">FAILED</option>
+    </selection>
+
 </object-views>

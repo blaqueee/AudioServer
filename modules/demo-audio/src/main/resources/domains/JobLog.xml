@@ -6,9 +6,15 @@
     <module name="audio" package="com.axelor.apps.audio.db"/>
 
     <entity name="JobLog">
-        <string name="customOfficeName"/>
-        <datetime name="sentAt"/>
+        <string name="customOfficeName" title="Custom office"/>
+        <string name="status" selection="log.status.select" title="Status"/>
+        <datetime name="sentAt" title="Sent at"/>
 
+        <extra-code>
+            <![CDATA[
+                public static final String STATUS_SUCCESS= "success";
+                public static final String STATUS_FAILED = "failed";
+            ]]>
+        </extra-code>
     </entity>
-    
 </domain-models>

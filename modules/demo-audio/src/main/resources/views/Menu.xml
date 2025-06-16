@@ -19,4 +19,11 @@
     <view type="form" name="audio-sound-task-form"/>
   </action-view>
 
+  <menuitem name="menu-job-log" title="Job log" action="job-log-all"/>
+
+  <action-view name="job-log-all" title="Job log" model="com.axelor.apps.audio.db.JobLog">
+    <view type="grid" name="job-log-grid"/>
+    <view type="form" name="job-log-form"/>
+  </action-view>
+
 </object-views>
