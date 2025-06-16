@@ -1,6 +1,7 @@
 package com.axelor.apps.audio.websocket.audio.stream;
 
 import com.axelor.apps.audio.tcp.TcpServerService;
+import com.axelor.apps.audio.tcp.TcpSessionStorage;
 import com.axelor.apps.audio.websocket.config.NoAuthWebSocketConfigurator;
 import com.axelor.common.StringUtils;
 import com.axelor.inject.Beans;
@@ -29,13 +30,16 @@ public class AudioWebSocketEndpoint {
 
     private static final Map<String, Channel> CHANNELS = new ConcurrentHashMap();
     private static final Logger logger = LoggerFactory.getLogger(AudioWebSocketEndpoint.class);
-    private static final Set<Session> activeSessions = Collections.synchronizedSet(new HashSet<>());
     private final TcpServerService tcpServerService;
+    private final AudioSessionStorage audioSessionStorage;
+    private final TcpSessionStorage tcpSessionStorage;
 
     @Inject
     public AudioWebSocketEndpoint(Set<Channel> channels) {
         channels.stream().filter(Channel::isEnabled).forEach(this::register);
         this.tcpServerService = Beans.get(TcpServerService.class);
+        this.audioSessionStorage = Beans.get(AudioSessionStorage.class);
+        this.tcpSessionStorage = Beans.get(TcpSessionStorage.class);
     }
 
     private void register(Channel channel) {
@@ -52,7 +56,7 @@ public class AudioWebSocketEndpoint {
 
     @OnOpen
     public void onOpen(Session session) {
-        activeSessions.add(session);
+        audioSessionStorage.addSession(session);
         Map<String, List<String>> requestParameterMap = session.getRequestParameterMap();
 
         List<String> clientIdsFromUrl = requestParameterMap.get("tcpClients");
@@ -60,17 +64,17 @@ public class AudioWebSocketEndpoint {
         if (clientIdsFromUrl != null && !clientIdsFromUrl.isEmpty()) {
             session.getUserProperties().put("clientIdsForSession", clientIdsFromUrl);
             logger.info("WebSocket opened: {}. Client IDs from URL: {}. Total sessions: {}",
-                    session.getId(), clientIdsFromUrl, activeSessions.size());
+                    session.getId(), clientIdsFromUrl, audioSessionStorage.getSessions().size());
         } else {
             logger.warn("WebSocket opened: {}. No 'tcpClients' parameter found in URL. Total sessions: {}",
-                    session.getId(), activeSessions.size());
+                    session.getId(), audioSessionStorage.getSessions().size());
         }
     }
 
     @OnClose
     public void onClose(Session session) {
-        activeSessions.remove(session);
-        logger.info("WebSocket closed: {}. Total sessions: {}", session.getId(), activeSessions.size());
+        audioSessionStorage.removeSession(session);
+        logger.info("WebSocket closed: {}. Total sessions: {}", session.getId(), audioSessionStorage.getSessions().size());
     }
 
     @OnMessage
@@ -87,7 +91,7 @@ public class AudioWebSocketEndpoint {
 
         if (targetTcpClientIDs != null && !targetTcpClientIDs.isEmpty()) {
             logger.info("Processing audio for session {} with IDs: {}", session.getId(), targetTcpClientIDs);
-            tcpServerService.sendBytes(message, targetTcpClientIDs);
+            tcpSessionStorage.sendBytes(message, targetTcpClientIDs);
 
         } else {
             logger.warn("Received audio for session {} but no target TCP client IDs were set or found. Skipping TCP send.", session.getId());
@@ -97,6 +101,6 @@ public class AudioWebSocketEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) {
         logger.error("WebSocket error for session {}: {}", session.getId(), throwable.getMessage(), throwable);
-        activeSessions.remove(session);
+        audioSessionStorage.removeSession(session);
     }
 }
