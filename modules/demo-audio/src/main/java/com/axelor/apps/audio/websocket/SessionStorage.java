@@ -6,6 +6,7 @@ import com.axelor.apps.audio.db.repo.CustomsOfficeRepo;
 import com.axelor.apps.audio.db.repo.JobLogRepository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ public class SessionStorage {
         return sessions.get(id);
     }
 
+    @Transactional(rollbackOn = {Exception.class})
     public void sendTo(Long id, String message) throws Exception {
         Session session = getSession(id);
         if (session != null && session.isOpen()) {
