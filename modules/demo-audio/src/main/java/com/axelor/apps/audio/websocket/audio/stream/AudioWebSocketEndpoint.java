@@ -1,6 +1,5 @@
 package com.axelor.apps.audio.websocket.audio.stream;
 
-import com.axelor.apps.audio.tcp.TcpServerService;
 import com.axelor.apps.audio.tcp.TcpSessionStorage;
 import com.axelor.apps.audio.websocket.config.NoAuthWebSocketConfigurator;
 import com.axelor.common.StringUtils;
@@ -30,14 +29,12 @@ public class AudioWebSocketEndpoint {
 
     private static final Map<String, Channel> CHANNELS = new ConcurrentHashMap();
     private static final Logger logger = LoggerFactory.getLogger(AudioWebSocketEndpoint.class);
-    private final TcpServerService tcpServerService;
     private final AudioSessionStorage audioSessionStorage;
     private final TcpSessionStorage tcpSessionStorage;
 
     @Inject
     public AudioWebSocketEndpoint(Set<Channel> channels) {
         channels.stream().filter(Channel::isEnabled).forEach(this::register);
-        this.tcpServerService = Beans.get(TcpServerService.class);
         this.audioSessionStorage = Beans.get(AudioSessionStorage.class);
         this.tcpSessionStorage = Beans.get(TcpSessionStorage.class);
     }

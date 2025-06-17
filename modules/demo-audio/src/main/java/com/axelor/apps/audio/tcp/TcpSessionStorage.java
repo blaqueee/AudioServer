@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Singleton
 public class TcpSessionStorage {
@@ -19,8 +20,8 @@ public class TcpSessionStorage {
     private final ExecutorService clientHandlerExecutor;
 
     @Inject
-    public TcpSessionStorage(ExecutorService clientHandlerExecutor) {
-        this.clientHandlerExecutor = clientHandlerExecutor;
+    public TcpSessionStorage() {
+        this.clientHandlerExecutor = Executors.newCachedThreadPool();
     }
 
     public void addClient(String clientId, OutputStream out) {
