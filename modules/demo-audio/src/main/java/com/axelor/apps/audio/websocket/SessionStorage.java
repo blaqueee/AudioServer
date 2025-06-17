@@ -55,7 +55,6 @@ public class SessionStorage {
             }
         } else {
             this.saveLogs(id, JobLogRepository.STATUS_FAILED);
-            throw new Exception("Client not found");
         }
     }
 
