@@ -43,7 +43,7 @@ public class SessionStorage {
     }
 
     @Transactional(rollbackOn = {Exception.class})
-    public void sendTo(Long id, String message) throws Exception {
+    public void sendTo(Long id, String message) {
         Session session = getSession(id);
         if (session != null && session.isOpen()) {
             try {
@@ -51,7 +51,7 @@ public class SessionStorage {
                 this.saveLogs(id, JobLogRepository.STATUS_SUCCESS);
                 LOG.debug("Message sent: {}", message);
             } catch (IOException e) {
-                throw new Exception();
+                LOG.error("Message not sent", e);
             }
         } else {
             this.saveLogs(id, JobLogRepository.STATUS_FAILED);
