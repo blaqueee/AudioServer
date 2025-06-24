@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,6 +27,7 @@ public class TcpSessionStorage {
 
     public void addClient(String clientId, OutputStream out) {
         connectedClients.put(clientId, out);
+        logger.info("TCP client '{}' added. Total active TCP clients: {}", clientId, connectedClients.size());
     }
 
     public ConcurrentHashMap<String, OutputStream> getConnectedClients() {
@@ -33,45 +35,54 @@ public class TcpSessionStorage {
     }
 
     public void removeClient(String clientId) {
-        connectedClients.remove(clientId);
-    }
-
-    public OutputStream getClient(String clientId) {
-        return connectedClients.get(clientId);
+        OutputStream outputStream = connectedClients.remove(clientId);
+        if (outputStream != null) {
+            try {
+                outputStream.close();
+                logger.info("TCP client '{}' removed and OutputStream closed. Total active TCP clients: {}", clientId, connectedClients.size());
+            } catch (IOException e) {
+                logger.warn("Error closing OutputStream for client '{}' during removal: {}", clientId, e.getMessage());
+            }
+        } else {
+            logger.warn("Attempted to remove non-existent client '{}'.", clientId);
+        }
     }
 
     public boolean containsClient(String clientId) {
         return connectedClients.containsKey(clientId);
     }
 
-    public void sendBytes(ByteBuffer data, List<String> targetClientIDs) {
-        if (targetClientIDs == null || targetClientIDs.isEmpty()) {
-            logger.warn("No target client IDs provided for sending data. Skipping TCP send.");
+    public void sendBytes(ByteBuffer data, List<String> targetTcpClientIDs) {
+        if (connectedClients.isEmpty()) {
+            logger.debug("sendBytes: No TCP clients connected. Skipping send.");
+            return;
+        }
+
+        if (targetTcpClientIDs == null || targetTcpClientIDs.isEmpty()) {
+            logger.debug("sendBytes: No target TCP client IDs specified. Skipping send.");
             return;
         }
 
         final byte[] bytesToSend = new byte[data.remaining()];
         data.duplicate().get(bytesToSend);
 
-        for (String clientId : targetClientIDs) {
-            OutputStream outputStream = this.getClient(clientId);
-            if (outputStream == null) {
-                logger.warn("TCP client '{}' is not connected or not found. Skipping send.", clientId);
-                continue;
-            }
+        for (Map.Entry<String, OutputStream> entry : connectedClients.entrySet()) {
+            String clientId = entry.getKey();
+            OutputStream outputStream = entry.getValue();
 
-            clientHandlerExecutor.submit(() -> {
-                try {
-                    outputStream.write(bytesToSend);
-                    outputStream.flush();
-                    logger.debug("Sent {} bytes to TCP client '{}'.", bytesToSend.length, clientId);
-                } catch (IOException e) {
-                    logger.error("Error sending bytes to TCP client '{}': {}. Removing client.", clientId, e.getMessage(), e);
-                    this.removeClient(clientId);
-                } catch (Exception e) {
-                    logger.error("Unexpected error during send to TCP client '{}': {}", clientId, e.getMessage(), e);
-                }
-            });
+            if (targetTcpClientIDs.contains(clientId)) {
+                clientHandlerExecutor.submit(() -> {
+                    try {
+                        outputStream.write(bytesToSend);
+                        outputStream.flush();
+                    } catch (IOException e) {
+                        logger.error("Error sending bytes to client '{}': {}. Removing client.", clientId, e.getMessage());
+                        removeClient(clientId);
+                    } catch (Exception e) {
+                        logger.error("Unexpected error during send to client '{}': {}", clientId, e.getMessage(), e);
+                    }
+                });
+            }
         }
     }
 }

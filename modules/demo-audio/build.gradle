@@ -1,5 +1,6 @@
 plugins {
   id 'com.axelor.app'
+  id "com.github.node-gradle.node"
 }
 
 axelor {
@@ -14,3 +15,124 @@ dependencies {
   implementation 'javax.websocket:javax.websocket-api:1.1'
   implementation 'javax.annotation:javax.annotation-api:1.3.2'
 }
+
+node {
+  yarnVersion = '1.22.19'
+  download = true
+  distBaseUrl = null
+  nodeModulesDir = file('src/main/audio-producer')
+  version  = '20.10.0'
+}
+
+task buildFront(type: YarnTask) {
+  group = 'axelor'
+  description = 'Build Front-end'
+
+  inputs.files('src/main/audio-producer/package.json', 'src/main/audio-producer/yarn.lock')
+  inputs.dir('src/main/audio-producer/src')
+  inputs.dir('src/main/audio-producer/public')
+  outputs.dir('src/main/audio-producer/build')
+
+  dependsOn 'installFrontDeps'
+  args = ["run", "build"]
+}
+
+task installFrontDeps(type: YarnTask) {
+  group = 'axelor'
+  description = 'Install Front-end dependencies'
+
+  args = ['install']
+}
+
+task copyReactWebapp(type: Copy) {
+  destinationDir = file("${projectDir}/src/main/webapp")
+  into("audio-producer/out") {
+    from "src/main/audio-producer/build"
+  }
+  dependsOn 'buildFront'
+}
+
+// В вашем файле modules/demo-audio/build.gradle
+
+task startProxyBackground {
+  group = 'axelor'
+  description = 'Starts the WebSocket proxy server in the background using Java ProcessBuilder.'
+
+  doLast {
+    def proxyDir = file("${projectDir}/src/main/audio-producer")
+
+    def npmCmd
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+      npmCmd = 'npm.cmd'
+    } else {
+      npmCmd = 'npm'
+    }
+
+    println "Starting WebSocket proxy server in background..."
+    println "Working directory: ${proxyDir}"
+    println "Command: ${npmCmd} run proxy"
+
+    def processBuilder = new ProcessBuilder(npmCmd, 'run', 'proxy')
+    processBuilder.directory(proxyDir)
+
+    // Определяем куда перенаправлять вывод в зависимости от ОС
+    // (Я оставляю тихое перенаправление в NUL/dev/null,
+    // но если вам нужна отладка, можете временно вернуть INHERIT)
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+      processBuilder.redirectOutput(ProcessBuilder.Redirect.to(new File('NUL')))
+      processBuilder.redirectError(ProcessBuilder.Redirect.to(new File('NUL')))
+    } else {
+      processBuilder.redirectOutput(ProcessBuilder.Redirect.to(new File('/dev/null')))
+      processBuilder.redirectError(ProcessBuilder.Redirect.to(new File('/dev/null')))
+    }
+
+    def process = processBuilder.start()
+
+    if (process.isAlive()) {
+      println "WebSocket proxy process launched. PID: ${process.pid()}"
+
+      Runtime.getRuntime().addShutdownHook(new Thread({
+        println "Shutting down WebSocket proxy (PID: ${process.pid()})..."
+        process.destroy()
+        try {
+          if (!process.waitFor(5, TimeUnit.SECONDS)) {
+            println "Proxy did not terminate gracefully, forcing destruction."
+            process.destroyForcibly()
+          }
+        } catch (InterruptedException e) {
+          println "Interrupted while waiting for proxy to terminate: ${e.message}"
+          process.destroyForcibly()
+        }
+        println "WebSocket proxy shutdown complete."
+      } as Runnable))
+
+    } else {
+      println "Failed to launch WebSocket proxy process."
+    }
+  }
+}
+
+rootProject.tasks.run.dependsOn startProxyBackground
+
+// ... остальная часть build.gradle без изменений
+
+rootProject.tasks.run.dependsOn startProxyBackground
+
+clean {
+  delete "src/main/audio-producer/.yarn/cache",
+          "src/main/audio-producer/.yarn/unplugged",
+          "src/main/audio-producer/.yarn/install-state.gz",
+          "src/main/audio-producer/dist",
+          "src/main/audio-producer/node_modules",
+          "src/main/audio-producer/build"
+  delete file("${projectDir}/src/main/webapp/audio-producer")
+}
+
+jar {
+  dependsOn 'copyReactWebapp'
+}
+
+build.dependsOn copyReactWebapp
+rootProject.tasks.war.dependsOn copyReactWebapp
+
+test.dependsOn copyReactWebapp
