@@ -46,4 +46,5 @@ hs_err_pid*
 
 # JavaScript
 node_modules
+modules/demo-audio/src/main/audio-producer/src/config.js
 
