@@ -13,7 +13,12 @@ import com.axelor.apps.audio.websocket.SessionStorage;
 import com.axelor.apps.audio.websocket.WebSocketServer;
 import com.axelor.apps.audio.websocket.audio.stream.AudioSessionStorage;
 import com.axelor.apps.audio.websocket.audio.stream.AudioWebSocketEndpoint;
+import com.axelor.web.socket.Channel;
 import com.axelor.web.socket.WebSocketEndpoint;
+import com.google.inject.TypeLiteral;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class AudioModule extends AxelorModule {
 
@@ -25,6 +30,7 @@ public class AudioModule extends AxelorModule {
         bind(SoundService.class).to(SoundServiceImpl.class);
         bind(SearchService.class).to(SearchServiceImpl.class);
         bind(SessionStorage.class).asEagerSingleton();
+        bind(new TypeLiteral<Set<Channel>>() {}).toInstance(Collections.emptySet());
 
         this.bind(WebSocketEndpoint.class).asEagerSingleton();
         bind(WebSocketServer.class).asEagerSingleton();
