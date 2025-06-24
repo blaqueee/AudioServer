@@ -12,7 +12,7 @@ public class CommandDto {
         ObjectData data = new ObjectData();
         commandDto.setCommand(command);
         String baseHost = APP_SETTINGS.get("application.base.host", "http://localhost:8080/open-platform-demo");
-        String apiHost = APP_SETTINGS.get("application.download.audio.api", "/ws/public/download/");
+        String apiHost = APP_SETTINGS.get("application.download.audio.api", "/ws/public/download");
         String fullUrl = baseHost + apiHost + "?id=" + id;
         data.setUrl(fullUrl);
         commandDto.setData(data);

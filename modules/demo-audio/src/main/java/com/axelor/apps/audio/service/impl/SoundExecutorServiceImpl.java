@@ -6,22 +6,19 @@ import com.axelor.apps.audio.db.repo.SoundTaskRepository;
 import com.axelor.apps.audio.service.SoundExecutorService;
 import com.axelor.apps.audio.service.SoundSenderService;
 import com.axelor.apps.audio.service.SoundTaskService;
-import com.axelor.meta.MetaFiles;
 import com.axelor.meta.db.MetaFile;
 import com.google.inject.Inject;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SoundExecutorServiceImpl implements SoundExecutorService {
+    private static final Logger log = LoggerFactory.getLogger(SoundExecutorServiceImpl.class);
     private final SoundTaskRepository soundTaskRepository;
     private final SoundTaskService soundTaskService;
     private final SoundSenderService soundSenderService;
-    private static final int MAX_CONCURRENT_FFMPEG_PER_TASK = 32;
 
     @Inject
     public SoundExecutorServiceImpl(SoundTaskRepository soundTaskRepository, SoundTaskService soundTaskService, SoundSenderService soundSenderService) {
@@ -53,26 +50,13 @@ public class SoundExecutorServiceImpl implements SoundExecutorService {
         Set<CustomsOffice> customsOffices = soundTask.getCustomsOffices();
         MetaFile soundFile = soundTask.getSoundFile();
 
-        int numOffices = customsOffices.size();
-
-        int poolSizeForThisTask = Math.min(numOffices, MAX_CONCURRENT_FFMPEG_PER_TASK);
-        if (poolSizeForThisTask <= 0) poolSizeForThisTask = 1;
-
-        ExecutorService taskSpecificExecutor = Executors.newFixedThreadPool(poolSizeForThisTask);
-
         for (CustomsOffice office : customsOffices) {
-            taskSpecificExecutor.submit(() -> {
                 try {
                     soundSenderService.send(soundFile.getId(), office);
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    log.debug("Failed to send sound request", e);
                 }
-            });
         }
-
-        taskSpecificExecutor.shutdown();
     }
 
 }

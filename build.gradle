@@ -39,7 +39,7 @@ dependencies {
 }
 
 war {
-  archiveFileName = 'open-platform-demo.war'
+  archiveFileName = 'audio.war'
 }
 
 apply from: 'gradle/style.gradle'
