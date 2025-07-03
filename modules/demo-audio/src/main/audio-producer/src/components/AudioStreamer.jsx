@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from 'react';
-import axios from 'axios';
 import { Button, Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import CustomsOfficeSelector from './CustomsOfficeSelector';
-
-const PROXY_URL = 'ws://localhost:3001';
+import {PROXY_URL} from "@/config.js";
 
 // Create a custom theme
 const theme = createTheme({

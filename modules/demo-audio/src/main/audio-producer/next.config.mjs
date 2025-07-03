@@ -7,8 +7,8 @@ const nextConfig = {
     ...(process.env.NODE_ENV === 'production' && {
         output: 'export',
         distDir: 'build',
-        basePath: '/open-platform-demo/audio-producer/out',
-        assetPrefix: '/open-platform-demo/audio-producer/out/',
+        basePath: '/audio/audio-producer/out',
+        assetPrefix: '/audio/audio-producer/out/',
     }),
     
     async rewrites() {

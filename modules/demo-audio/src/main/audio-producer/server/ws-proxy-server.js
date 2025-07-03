@@ -4,7 +4,7 @@ import {WS_PROXY_PORT,
     AXELOR_HTTP_BASE_URL,
     AXELOR_WS_BASE_URL,
     AXELOR_USER_NAME,
-    AXELOR_PASSWORD} from '@/config.js';
+    AXELOR_PASSWORD} from '../src/config.js';
 
 function parseJSessionId(setCookieHeaders) {
     if (!setCookieHeaders) return null;
