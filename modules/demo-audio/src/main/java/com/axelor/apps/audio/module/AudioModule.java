@@ -7,8 +7,12 @@ import com.axelor.apps.audio.db.repo.SoundTaskRepo;
 import com.axelor.apps.audio.db.repo.SoundTaskRepository;
 import com.axelor.apps.audio.service.*;
 import com.axelor.apps.audio.service.impl.*;
+import com.axelor.apps.audio.tcp.TcpServerService;
+import com.axelor.apps.audio.tcp.TcpSessionStorage;
 import com.axelor.apps.audio.websocket.SessionStorage;
 import com.axelor.apps.audio.websocket.WebSocketServer;
+import com.axelor.apps.audio.websocket.audio.stream.AudioSessionStorage;
+import com.axelor.apps.audio.websocket.audio.stream.AudioWebSocketEndpoint;
 import com.axelor.web.socket.WebSocketEndpoint;
 
 public class AudioModule extends AxelorModule {
@@ -27,6 +31,10 @@ public class AudioModule extends AxelorModule {
         bind(CustomsOfficeRepository.class).to(CustomsOfficeRepo.class);
         bind(CustomsOfficeService.class).to(CustomsOfficeServiceImpl.class);
         bind(SoundTaskRepository.class).to(SoundTaskRepo.class);
+        bind(AudioWebSocketEndpoint.class).asEagerSingleton();
+        bind(TcpServerService.class).asEagerSingleton();
+        bind(TcpSessionStorage.class).asEagerSingleton();
+        bind(AudioSessionStorage.class).asEagerSingleton();
     }
 
 }

@@ -26,4 +26,11 @@
     <view type="form" name="job-log-form"/>
   </action-view>
 
+  <menuitem name="menu-frontend" title="Sounds Stream" action="frontend-action" />
+
+  <action-view name="frontend-action" title="Sounds Stream">
+    <view type="html" name="audio-producer/out" />
+  </action-view>
+
+
 </object-views>
