@@ -24,6 +24,38 @@ const theme = createTheme({
   },
 });
 
+const resampleAudio = (audioBuffer, originalSampleRate, targetSampleRate) => {
+    if (originalSampleRate === targetSampleRate) {
+        return audioBuffer;
+    }
+
+    const ratio = targetSampleRate / originalSampleRate;
+    const newLength = Math.round(audioBuffer.length * ratio);
+    const result = new Float32Array(newLength);
+    const analyser = new Resampler(originalSampleRate, targetSampleRate, 1, newLength); // Using a simplified Resampler (see note below)
+
+    analyser.resample(audioBuffer, result);
+    return result;
+};
+
+class Resampler {
+    constructor(fromSampleRate, toSampleRate, channels, outputBufferSize) {
+        this.fromSampleRate = fromSampleRate;
+        this.toSampleRate = toSampleRate;
+        this.channels = channels;
+        this.outputBufferSize = outputBufferSize;
+    }
+
+    resample(buffer, output) {
+        const ratio = this.fromSampleRate / this.toSampleRate;
+        for (let i = 0; i < output.length; i++) {
+            const originalIndex = Math.floor(i * ratio);
+            output[i] = buffer[originalIndex];
+        }
+    }
+}
+
+
 const AudioStreamer = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [selectedOfficeIds, setSelectedOfficeIds] = useState([]);
@@ -35,6 +67,8 @@ const AudioStreamer = () => {
     const audioContextRef = useRef(null);
     const scriptProcessorRef = useRef(null);
     const mediaStreamRef = useRef(null);
+
+    const TARGET_SAMPLE_RATE = 44100;
 
     useEffect(() => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -54,7 +88,7 @@ const AudioStreamer = () => {
         const checkMicrophone = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                stream.getTracks().forEach(track => track.stop());
+                stream.getTracks().forEach(track => track.stop()); // Stop tracks immediately after checking
                 setMicrophoneAccess(true);
                 console.log('Доступ к микрофону подтвержден.');
             } catch (error) {
@@ -84,7 +118,15 @@ const AudioStreamer = () => {
         setWsStatus('connecting');
 
         try {
-            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)({
+                sampleRate: TARGET_SAMPLE_RATE
+            });
+
+            if (audioContextRef.current.sampleRate !== TARGET_SAMPLE_RATE) {
+                console.warn(`AudioContext created with sample rate ${audioContextRef.current.sampleRate} Hz, not the requested ${TARGET_SAMPLE_RATE} Hz. Resampling will be performed.`);
+            } else {
+                console.log(`AudioContext created with desired sample rate: ${TARGET_SAMPLE_RATE} Hz.`);
+            }
 
             if (audioContextRef.current.state === 'suspended') {
                 console.log('AudioContext приостановлен, попытка возобновления...');
@@ -116,7 +158,13 @@ const AudioStreamer = () => {
                         return;
                     }
 
-                    const inputBuffer = event.inputBuffer.getChannelData(0);
+                    let inputBuffer = event.inputBuffer.getChannelData(0);
+
+                    // Resample if the AudioContext's sample rate is not the target
+                    if (audioContextRef.current.sampleRate !== TARGET_SAMPLE_RATE) {
+                        inputBuffer = resampleAudio(inputBuffer, audioContextRef.current.sampleRate, TARGET_SAMPLE_RATE);
+                    }
+
                     const pcm16 = new Int16Array(inputBuffer.length);
                     for (let i = 0; i < inputBuffer.length; i++) {
                         pcm16[i] = Math.max(-1, Math.min(1, inputBuffer[i])) * 0x7FFF;
