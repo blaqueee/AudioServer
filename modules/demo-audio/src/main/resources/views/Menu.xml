@@ -26,6 +26,13 @@
     <view type="form" name="job-log-form"/>
   </action-view>
 
+  <menuitem name="menu-frontend" title="Sounds Stream" action="frontend-action" />
+
+  <action-view name="frontend-action" title="Sounds Stream">
+    <view type="html" name="audio-producer/out" />
+  </action-view>
+
+
   <menuitem name="menu-ws-clients" title="Online WS Clients" action="ws-clients-all"/>
 
   <action-view name="ws-clients-all" title="Online WS Clients" model="com.axelor.apps.audio.dto.OnlineClientsDto">

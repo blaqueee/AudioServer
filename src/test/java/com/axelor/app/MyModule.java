@@ -20,7 +20,12 @@ package com.axelor.app;
 
 import com.axelor.auth.AuthModule;
 import com.axelor.db.JpaModule;
+import com.axelor.web.socket.Channel;
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class MyModule extends AbstractModule {
 
@@ -29,5 +34,6 @@ public class MyModule extends AbstractModule {
     install(new JpaModule("testUnit"));
     install(new AuthModule());
     install(new AppModule());
+    bind(new TypeLiteral<Set<Channel>>() {}).toInstance(Collections.emptySet());
   }
 }
