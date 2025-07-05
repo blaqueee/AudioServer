@@ -14,6 +14,8 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,6 +42,10 @@ public class SessionStorage {
 
     public Session getSession(Long id) {
         return sessions.get(id);
+    }
+
+    public List<Long> getClientIDes() {
+        return new ArrayList<>(sessions.keySet());
     }
 
     @Transactional(rollbackOn = {Exception.class})

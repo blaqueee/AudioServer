@@ -27,6 +27,7 @@ public class AudioModule extends AxelorModule {
         bind(CustomsOfficeRepository.class).to(CustomsOfficeRepo.class);
         bind(CustomsOfficeService.class).to(CustomsOfficeServiceImpl.class);
         bind(SoundTaskRepository.class).to(SoundTaskRepo.class);
+        bind(OnlineClientsService.class).to(OnlineClientsServiceImpl.class);
     }
 
 }

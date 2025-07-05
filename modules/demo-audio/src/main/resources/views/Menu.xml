@@ -26,4 +26,17 @@
     <view type="form" name="job-log-form"/>
   </action-view>
 
+  <menuitem name="menu-ws-clients" title="Online WS Clients" action="ws-clients-all"/>
+
+  <action-view name="ws-clients-all" title="Online WS Clients" model="com.axelor.apps.audio.dto.OnlineClientsDto">
+    <view type="form" name="ws-clients-form"/>
+  </action-view>
+
+  <menuitem name="menu-tcp-clients" title="Online TCP Clients" action="tcp-clients-all"/>
+
+  <action-view name="tcp-clients-all" title="Online TCP Clients" model="com.axelor.apps.audio.db.TcpClientsLog">
+    <view type="grid" name="tcp-clients-grid"/>
+    <view type="form" name="tcp-clients-form"/>
+  </action-view>
+
 </object-views>

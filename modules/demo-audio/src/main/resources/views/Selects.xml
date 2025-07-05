@@ -24,4 +24,8 @@
         <option value="failed">FAILED</option>
     </selection>
 
+    <selection name="clients.status.select">
+        <option value="online">ONLINE</option>
+    </selection>
+
 </object-views>
