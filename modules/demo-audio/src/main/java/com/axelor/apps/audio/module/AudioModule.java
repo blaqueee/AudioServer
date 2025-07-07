@@ -35,6 +35,7 @@ public class AudioModule extends AxelorModule {
         bind(TcpServerService.class).asEagerSingleton();
         bind(TcpSessionStorage.class).asEagerSingleton();
         bind(AudioSessionStorage.class).asEagerSingleton();
+        bind(OnlineClientsService.class).to(OnlineClientsServiceImpl.class);
     }
 
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_7.4.xsd">
+
+    <grid title="Online WebSocket clients" name="ws-clients-grid" model="com.axelor.apps.audio.dto.OnlineClientsDto"
+          canSave="false" canEdit="false" canDelete="false" canNew="false">
+        <field name="customOffice"/>
+        <field name="status"/>
+    </grid>
+
+    <form title="Online WebSocket client" name="ws-clients-form" model="com.axelor.apps.audio.dto.OnlineClientsDto"
+          canNew="false" canEdit="false" canSave="false" onNew="action-method-get-online-ws-clients" onLoad="action-method-get-online-ws-clients" canDelete="false">
+        <panel readonly="true">
+            <field name="$onlineClients" title="Online WebSocket clients"
+                   colSpan="12" widget="one-to-many" target="com.axelor.apps.audio.dto.OnlineClientsDto"/>
+        </panel>
+    </form>
+
+    <action-method name="action-method-get-online-ws-clients">
+        <call class="com.axelor.apps.audio.controller.OnlineClientsController" method="getWsClients"/>
+    </action-method>
+
+</object-views>
