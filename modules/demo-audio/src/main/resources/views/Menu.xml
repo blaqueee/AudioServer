@@ -41,8 +41,7 @@
 
   <menuitem name="menu-tcp-clients" title="Online TCP Clients" action="tcp-clients-all"/>
 
-  <action-view name="tcp-clients-all" title="Online TCP Clients" model="com.axelor.apps.audio.db.TcpClientsLog">
-    <view type="grid" name="tcp-clients-grid"/>
+  <action-view name="tcp-clients-all" title="Online TCP Clients" model="com.axelor.apps.audio.dto.OnlineClientsDto">
     <view type="form" name="tcp-clients-form"/>
   </action-view>
 

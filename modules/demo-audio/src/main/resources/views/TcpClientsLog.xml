@@ -10,11 +10,14 @@
     </grid>
 
     <form title="Online Tcp client" name="tcp-clients-form" model="com.axelor.apps.audio.dto.OnlineClientsDto"
-          canNew="false" canEdit="false" canSave="false" canDelete="false">
+          canNew="false" canEdit="false" onNew="action-method-get-online-tcp-clients" onLoad="action-method-get-online-tcp-clients" canSave="false" canDelete="false">
         <panel readonly="true">
-            <field name="customOffice"/>
-            <field name="status"/>
+            <field name="$onlineClients" title="Online Tcp clients" widget="one-to-many" target="com.axelor.apps.audio.dto.OnlineClientsDto" colSpan="12"/>
         </panel>
     </form>
+
+    <action-method name="action-method-get-online-tcp-clients">
+        <call class="com.axelor.apps.audio.controller.OnlineClientsController" method="getTcpClients"/>
+    </action-method>
 
 </object-views>

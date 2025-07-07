@@ -19,8 +19,12 @@ public class OnlineClientsController {
 
     public void getWsClients(ActionRequest request, ActionResponse response) {
         List<OnlineClientsDto> wsClients = onlineClientsService.getWSClients();
-
         response.setValue("$onlineClients", wsClients);
+    }
+
+    public void getTcpClients(ActionRequest request, ActionResponse response) {
+        List<OnlineClientsDto> tcpClients = onlineClientsService.getTcpClients();
+        response.setValue("$onlineClients", tcpClients);
     }
 
 }

@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,6 +51,10 @@ public class TcpSessionStorage {
 
     public boolean containsClient(String clientId) {
         return connectedClients.containsKey(clientId);
+    }
+
+    public List<String> getClientIds() {
+        return new ArrayList<>(connectedClients.keySet());
     }
 
     public void sendBytes(ByteBuffer data, List<String> targetTcpClientIDs) {

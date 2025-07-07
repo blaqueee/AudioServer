@@ -44,7 +44,7 @@ public class SessionStorage {
         return sessions.get(id);
     }
 
-    public List<Long> getClientIDes() {
+    public List<Long> getClientIds() {
         return new ArrayList<>(sessions.keySet());
     }
 
